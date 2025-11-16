@@ -76,3 +76,6 @@ logs/
 # Node.js / JavaScript
 node_modules/
 web/node_modules/
+.next/
+web/.next/
+*.tsbuildinfo
