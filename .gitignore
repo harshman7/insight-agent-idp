@@ -78,3 +78,7 @@ logs/
 coverage.xml
 htmlcov/
 .tox/
+
+# Node.js / JavaScript
+node_modules/
+web/node_modules/
