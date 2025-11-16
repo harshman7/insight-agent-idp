@@ -34,3 +34,7 @@ numpy>=1.24.0
 openpyxl>=3.1.0  # For Excel export
 opencv-python>=4.8.0  # For image processing
 
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+

@@ -12,6 +12,18 @@ The implementation is designed to **mirror how this would run on AWS** (Textract
 
 ---
 
+## Why this project exists
+
+I built this to practice end-to-end architecture for an intelligent document processing system similar to what you'd run on AWS (Textract + Bedrock + RDS + OpenSearch), but using 100% local, free tools. My learning focus was:
+
+- **Designing a tool-using LLM agent** wired into SQL, metrics, and RAG
+- **Building an IDP pipeline** (OCR, classification, field extraction) for financial docs
+- **Structuring a FastAPI + Streamlit system** that's easy to "lift-and-shift" to AWS
+
+That makes the learning goal explicit instead of implicit.
+
+---
+
 ## Architecture Overview
 
 ### Conceptual Flow
@@ -107,7 +119,7 @@ This makes it easy to **lift and shift the architecture to AWS** later by replac
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd insight-agent-idp-local
+   cd insight-agent-idp
    ```
 
 2. **Create a virtual environment:**
@@ -329,8 +341,14 @@ Key configuration options in `app/config.py`:
 ### Running Tests
 
 ```bash
-# Add tests as needed
+# Run all tests
 pytest tests/
+
+# Run with verbose output
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=app --cov-report=term-missing
 ```
 
 ### Adding New Document Types
@@ -354,6 +372,20 @@ pytest tests/
 - [ ] Export insights to PDF/Excel
 - [ ] Real-time document processing webhooks
 - [ ] AWS deployment guide
+
+---
+
+## What I learned
+
+- **How to design tools and guardrails** so an LLM can safely query a SQL DB
+- **How to combine RAG + analytics** (FAISS + metrics functions + SQL) for grounded insights
+- **How to mirror a managed-cloud architecture** with local components first
+
+## Next steps
+
+- Add tests for the IDP pipeline and agent tool selection
+- Add GitHub Actions to run tests & lint on each push
+- Swap local components for AWS services (Textract, Bedrock, RDS) in a branch
 
 ---
 

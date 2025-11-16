@@ -71,3 +71,10 @@ logs/
 
 # Streamlit
 .streamlit/
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/

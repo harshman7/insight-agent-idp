@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/anomalies/layout,_N_T_/anomalies/page,_N_T_/anomalies"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/anomalies/__PAGE__",
+    "/anomalies",
+    "/_index",
+    "/_head"
+  ]
+}
