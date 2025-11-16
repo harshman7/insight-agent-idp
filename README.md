@@ -338,19 +338,6 @@ Key configuration options in `app/config.py`:
 
 ## Development
 
-### Running Tests
-
-```bash
-# Run all tests
-pytest tests/
-
-# Run with verbose output
-pytest tests/ -v
-
-# Run with coverage
-pytest tests/ --cov=app --cov-report=term-missing
-```
-
 ### Adding New Document Types
 
 1. Update `classify_document()` in `app/services/idp_pipeline.py`
@@ -383,8 +370,7 @@ pytest tests/ --cov=app --cov-report=term-missing
 
 ## Next steps
 
-- Add tests for the IDP pipeline and agent tool selection
-- Add GitHub Actions to run tests & lint on each push
+- Add GitHub Actions to run linting on each push
 - Swap local components for AWS services (Textract, Bedrock, RDS) in a branch
 
 ---

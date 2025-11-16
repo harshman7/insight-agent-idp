@@ -72,12 +72,6 @@ logs/
 # Streamlit
 .streamlit/
 
-# Testing
-.pytest_cache/
-.coverage
-coverage.xml
-htmlcov/
-.tox/
 
 # Node.js / JavaScript
 node_modules/
