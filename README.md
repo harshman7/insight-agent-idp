@@ -1,4 +1,4 @@
-# DocSage
+# DocSage 
 
 <div align="center">
   <img src="image.png" alt="DocSage Logo" width="150"/>
@@ -228,7 +228,17 @@ This makes it easy to **lift and shift the architecture to AWS** later by replac
    
    **Note:** PostgreSQL is the default and recommended database. To use SQLite instead (not recommended for production), set `USE_SQLITE=True` in your `.env` file and skip this step.
 
-6. **Verify Ollama is running:**
+6. **Create the database** (if it doesn't exist):
+   ```bash
+   docker-compose exec postgres psql -U postgres -c "CREATE DATABASE docsage;"
+   ```
+   
+   Or if you prefer to create it manually, connect to PostgreSQL and run:
+   ```sql
+   CREATE DATABASE docsage;
+   ```
+
+7. **Verify Ollama is running:**
    ```bash
    curl http://localhost:11434/api/tags
    ```
