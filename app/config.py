@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     # Database
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "insight_agent"
+    POSTGRES_DB: str = "docsage"
     POSTGRES_HOST: str = "localhost"
     POSTGRES_PORT: int = 5432
     USE_SQLITE: bool = False  # Set to True to use SQLite instead of PostgreSQL
@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         if self.USE_SQLITE:
-            return "sqlite:///./insight_agent.db"
+            return "sqlite:///./docsage.db"
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # API

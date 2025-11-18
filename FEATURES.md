@@ -1,6 +1,6 @@
-# 🚀 New Features Added to Insight Agent IDP
+# 🚀 New Features Added to DocSage
 
-This document summarizes all the "Wow Factor" features that have been implemented.
+This document summarizes all the "Wow Factor" features that have been implemented in the DocSage platform.
 
 ## ✅ Completed Features
 

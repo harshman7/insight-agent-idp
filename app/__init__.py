@@ -1,2 +1,3 @@
-# Insight Agent IDP Application
+# DocSage Platform
+# Intelligent Document Processing with AI-powered analytics
 

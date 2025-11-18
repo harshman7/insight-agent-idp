@@ -12,8 +12,8 @@ from app.services.insights import InsightsService
 from app.agents.tools import get_all_tools
 from app.config import settings
 
-class InsightAgent:
-    """Main agent that orchestrates RAG and SQL tools to answer questions using Ollama."""
+class DocSageAgent:
+    """DocSage's AI agent that orchestrates RAG and SQL tools to answer questions using Ollama."""
     
     def __init__(self, rag_service: Optional[RAGService] = None, enable_cache: bool = True):
         self.rag_service = rag_service

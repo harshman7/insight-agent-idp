@@ -1,6 +1,16 @@
-# Insight Agent for Document-Centric Analytics (Local IDP + AI)
+# DocSage
 
-This project is a **local, zero-cost prototype** of an AI-powered **Insight Agent** that sits on top of an Intelligent Document Processing (IDP) pipeline.
+<div align="center">
+  <img src="image.png" alt="DocSage Logo" width="150"/>
+  
+  **Intelligent Document Processing with AI-Powered Analytics**
+  
+  *Local, zero-cost alternative to AWS Textract + Bedrock*
+</div>
+
+---
+
+**DocSage** is a **local, zero-cost platform** for AI-powered document intelligence that sits on top of an Intelligent Document Processing (IDP) pipeline. DocSage features an intelligent AI agent that processes documents and answers questions using natural language.
 
 It ingests PDF documents (e.g., invoices, bank statements, forms), extracts structured data, and lets you **ask natural language questions** like:
 
@@ -46,7 +56,8 @@ That makes the learning goal explicit instead of implicit.
    - Embeddings are stored in a local **FAISS** index (no external vector DB).
    - This enables the agent to retrieve **supporting documents** for its answers.
 
-4. **Insight Agent (LLM + Tools)**
+4. **AI Agent (LLM + Tools)**
+   - DocSage features an intelligent AI agent that powers the system.
    - A local LLM (via [Ollama](https://ollama.com/)) provides reasoning and natural language generation.
    - The agent is wired with tools (using LangChain/LlamaIndex-style patterns):
      - `sql_tool`: run parameterized SQL queries on the transactional DB.
@@ -56,12 +67,12 @@ That makes the learning goal explicit instead of implicit.
 
 5. **API & UI**
    - **Backend:** FastAPI application exposing:
-     - `POST /chat/insights` – main endpoint for the Insight Agent.
+     - `POST /chat/insights` – main endpoint for DocSage's AI agent.
      - `GET /health` – health check endpoint.
      - `GET /docs` – interactive API documentation.
    - **Frontend:** Streamlit app with 8 comprehensive pages:
      - 📊 **Analytics Dashboard** – Time-series analytics, spending trends, vendor analysis, and forecasting.
-     - 💬 **Chat** – Natural language interface to query the Insight Agent.
+     - 💬 **Chat** – Natural language interface to interact with DocSage.
      - 📄 **Documents** – Document management with visual overlays, interactive corrections, and real-time upload.
      - ⚠️ **Anomalies** – Automated anomaly detection (duplicates, unusual amounts, missing fields).
      - 🔍 **Document Comparison** – Side-by-side document comparison and price change tracking.
@@ -100,10 +111,10 @@ This makes it easy to **lift and shift the architecture to AWS** later by replac
   - Real-time document upload with drag-and-drop support.
 
 ### AI-Powered Analytics
-- ✅ **RAG-enabled insight agent:**
-  - Combines SQL analytics with document retrieval.
+- ✅ **RAG-enabled AI agent:**
+  - DocSage's agent combines SQL analytics with document retrieval.
   - Answers questions in natural language and cites source docs.
-  - Tool-using agent that chooses between SQL, metrics, and RAG.
+  - Intelligent tool-using agent that chooses between SQL, metrics, and RAG.
 - ✅ **Time-series analytics:**
   - Monthly spending trends with interactive charts.
   - Daily spending visualization (last 30 days).
@@ -180,7 +191,7 @@ This makes it easy to **lift and shift the architecture to AWS** later by replac
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd insight-agent-idp
+   cd docsage
    ```
 
 2. **Create a virtual environment:**
@@ -200,7 +211,7 @@ This makes it easy to **lift and shift the architecture to AWS** later by replac
    # PostgreSQL (default database)
    POSTGRES_USER=postgres
    POSTGRES_PASSWORD=postgres
-   POSTGRES_DB=insight_agent
+   POSTGRES_DB=docsage
    POSTGRES_HOST=localhost
    POSTGRES_PORT=5432
    USE_SQLITE=False  # Set to True to use SQLite instead (not recommended for production)
@@ -353,7 +364,7 @@ app/
     receipt_matching.py      # Receipt-to-invoice matching
 
   agents/
-    insight_agent.py# Core orchestration logic
+    insight_agent.py# DocSageAgent class - Core AI agent orchestration logic
     tools.py        # Tool definitions exposed to the LLM
 
   vectorstore/
@@ -391,11 +402,11 @@ Key configuration options in `app/config.py`:
   - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_HOST`, `POSTGRES_PORT`: PostgreSQL connection settings
   - `USE_SQLITE`: Set to `True` to use SQLite instead (default: `False` - PostgreSQL is recommended)
 - **LLM:**
-  - `OLLAMA_MODEL`: LLM model to use (default: `llama3`)
+- `OLLAMA_MODEL`: LLM model to use (default: `llama3`)
   - `OLLAMA_BASE_URL`: Ollama API endpoint (default: `http://localhost:11434`)
 - **Vector Store:**
-  - `EMBEDDING_MODEL`: Embedding model (default: `all-MiniLM-L6-v2`)
-  - `FAISS_INDEX_PATH`: Path to FAISS index file
+- `EMBEDDING_MODEL`: Embedding model (default: `all-MiniLM-L6-v2`)
+- `FAISS_INDEX_PATH`: Path to FAISS index file
 - **API:**
   - `API_HOST`: API host (default: `0.0.0.0`)
   - `API_PORT`: API port (default: `8000`)

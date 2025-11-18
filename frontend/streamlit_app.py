@@ -1,5 +1,5 @@
 """
-Streamlit UI: Enhanced chat + analytics + document management for Insight Agent IDP.
+Streamlit UI: Enhanced chat + analytics + document management for DocSage platform.
 """
 import sys
 from pathlib import Path
@@ -32,7 +32,7 @@ from app.services.idp_pipeline import parse_document
 from app.services.receipt_matching import ReceiptMatcher
 from sqlalchemy import func
 
-st.set_page_config(page_title="Insight Agent IDP", layout="wide")
+st.set_page_config(page_title="DocSage", layout="wide", page_icon="📄")
 
 API_BASE_URL = f"http://{settings.API_HOST}:{settings.API_PORT}"
 
@@ -53,8 +53,16 @@ def call_insight_api(query: str, use_rag: bool = True, use_sql: bool = True) -> 
     except requests.exceptions.RequestException as e:
         return {"answer": f"Error connecting to API: {str(e)}", "sources": [], "sql_query": None}
 
-st.title("🚀 Insight Agent IDP")
-st.markdown("AI-Powered Intelligent Document Processing & Analytics")
+# Add logo at the top
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    logo_path = project_root / "image.png"
+    if logo_path.exists():
+        st.image(str(logo_path), width=150)
+
+st.title("📄 DocSage")
+st.markdown("**Intelligent Document Processing & Analytics**")
+st.markdown("*AI-powered insights from your documents*")
 
 # Sidebar for navigation
 page = st.sidebar.selectbox(

@@ -1,6 +1,6 @@
 # Using the Hugging Face Invoice/Receipt Dataset
 
-This guide shows you how to download and use the [invoices-and-receipts_ocr_v1](https://huggingface.co/datasets/mychen76/invoices-and-receipts_ocr_v1) dataset with your Insight Agent IDP system.
+This guide shows you how to download and use the [invoices-and-receipts_ocr_v1](https://huggingface.co/datasets/mychen76/invoices-and-receipts_ocr_v1) dataset with your DocSage platform.
 
 ## Quick Start
 

@@ -1,18 +1,18 @@
 """
-FastAPI entrypoint for the Insight Agent IDP application.
+FastAPI entrypoint for the DocSage platform.
 """
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.schemas import QueryRequest, QueryResponse
 from app.services.rag import RAGService
-from app.agents.insight_agent import InsightAgent
+from app.agents.insight_agent import DocSageAgent
 from app.db import get_db
 from sqlalchemy.orm import Session
 
 app = FastAPI(
-    title="Insight Agent IDP",
-    description="Intelligent Document Processing with RAG capabilities",
+    title="DocSage",
+    description="Intelligent Document Processing platform with AI-powered analytics and RAG capabilities",
     version="1.0.0"
 )
 
@@ -36,18 +36,18 @@ def get_rag_service() -> RAGService:
         _rag_service = RAGService()
     return _rag_service
 
-def get_agent() -> InsightAgent:
-    """Get or create agent instance."""
+def get_agent() -> DocSageAgent:
+    """Get or create DocSage's AI agent instance."""
     global _agent
     if _agent is None:
         rag_service = get_rag_service()
-        _agent = InsightAgent(rag_service=rag_service)
+        _agent = DocSageAgent(rag_service=rag_service)
     return _agent
 
 @app.get("/")
 async def root():
     return {
-        "message": "Insight Agent IDP API",
+        "message": "DocSage API",
         "version": "1.0.0",
         "endpoints": {
             "/chat/insights": "POST - Main endpoint for insight queries",
@@ -66,7 +66,7 @@ async def chat_insights(
     db: Session = Depends(get_db)
 ):
     """
-    Main endpoint for the Insight Agent.
+    Main endpoint for DocSage's AI agent.
     
     Accepts natural language queries and returns insights using:
     - SQL queries on structured data
