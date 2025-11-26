@@ -249,10 +249,16 @@ This makes it easy to **lift and shift the architecture to AWS** later by replac
 
 ### 1. Initialize Database
 
+**Important:** Make sure Docker is running and PostgreSQL is started before running these commands.
+
 **First, run the database migration** (if upgrading from an older version):
 
 ```bash
-python3 scripts/migrate_database.py
+# Activate virtual environment first
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run migration
+python scripts/migrate_database.py
 ```
 
 Then create tables and optionally seed with sample data:
