@@ -23,9 +23,20 @@ class Settings(BaseSettings):
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
     
-    # LLM (Ollama)
+    # LLM Provider Selection
+    LLM_PROVIDER: str = "ollama"  # Options: "ollama", "groq", "huggingface"
+    
+    # Ollama (local)
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "llama3"  # or mistral, codellama, etc.
+    
+    # Groq API (free tier available)
+    GROQ_API_KEY: Optional[str] = None
+    GROQ_MODEL: str = "llama-3.1-8b-instant"  # Fast and free
+    
+    # Hugging Face Inference API (free tier available)
+    HUGGINGFACE_API_KEY: Optional[str] = None
+    HUGGINGFACE_MODEL: str = "mistralai/Mistral-7B-Instruct-v0.2"
     
     # Vector Store
     FAISS_INDEX_PATH: str = "data/embeddings/faiss.index"

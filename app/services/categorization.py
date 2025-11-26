@@ -2,9 +2,8 @@
 Smart expense categorization using LLM.
 """
 import json
-import requests
 from typing import Optional, Dict, Any
-from app.config import settings
+from app.services.llm_service import call_llm
 
 # Common expense categories
 EXPENSE_CATEGORIES = [
@@ -45,23 +44,8 @@ Amount: ${amount:.2f}
 Respond with ONLY the category name, nothing else."""
 
     try:
-        # Call Ollama
-        response = requests.post(
-            f"{settings.OLLAMA_BASE_URL}/api/generate",
-            json={
-                "model": settings.OLLAMA_MODEL,
-                "prompt": prompt,
-                "stream": False,
-                "options": {
-                    "temperature": 0.3,  # Lower temperature for more consistent categorization
-                    "num_predict": 50
-                }
-            },
-            timeout=10
-        )
-        response.raise_for_status()
-        result = response.json()
-        category = result.get("response", "").strip()
+        # Call LLM (supports Ollama, Groq, Hugging Face)
+        category = call_llm(prompt, timeout=10).strip()
         
         # Clean up the response (remove quotes, extra text)
         category = category.strip('"').strip("'").strip()

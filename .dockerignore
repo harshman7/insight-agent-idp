@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data
+data/raw_docs/*
+data/processed/*
+data/embeddings/*
+!data/raw_docs/.gitkeep
+!data/processed/.gitkeep
+!data/embeddings/.gitkeep
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks
+notebooks/
+*.ipynb
+
+# Tests
+tests/
+test_*.py
+

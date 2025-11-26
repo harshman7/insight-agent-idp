@@ -13,24 +13,32 @@ from app.agents.tools import get_all_tools
 from app.config import settings
 
 class DocSageAgent:
-    """DocSage's AI agent that orchestrates RAG and SQL tools to answer questions using Ollama."""
+    """DocSage's AI agent that orchestrates RAG and SQL tools to answer questions using various LLM providers."""
     
     def __init__(self, rag_service: Optional[RAGService] = None, enable_cache: bool = True):
         self.rag_service = rag_service
         self.sql_tools = SQLTools()
         self.insights_service = InsightsService()
         self.tools = get_all_tools(rag_service)
-        self.ollama_base_url = settings.OLLAMA_BASE_URL
-        self.model_name = settings.OLLAMA_MODEL
+        self.llm_provider = settings.LLM_PROVIDER.lower()
         self.enable_cache = enable_cache
         self._response_cache: Dict[str, Dict[str, Any]] = {}
+    
+    def _call_llm(self, prompt: str, system_prompt: Optional[str] = None, timeout: int = 30) -> str:
+        """Call LLM API based on configured provider."""
+        if self.llm_provider == "groq":
+            return self._call_groq(prompt, system_prompt, timeout)
+        elif self.llm_provider == "huggingface":
+            return self._call_huggingface(prompt, system_prompt, timeout)
+        else:  # Default to Ollama
+            return self._call_ollama(prompt, system_prompt, timeout)
     
     def _call_ollama(self, prompt: str, system_prompt: Optional[str] = None, timeout: int = 30) -> str:
         """Call Ollama API to get LLM response."""
         try:
-            url = f"{self.ollama_base_url}/api/generate"
+            url = f"{settings.OLLAMA_BASE_URL}/api/generate"
             payload = {
-                "model": self.model_name,
+                "model": settings.OLLAMA_MODEL,
                 "prompt": prompt,
                 "system": system_prompt or "",
                 "stream": False
@@ -40,6 +48,70 @@ class DocSageAgent:
             return response.json().get("response", "")
         except Exception as e:
             return f"Error calling Ollama: {str(e)}"
+    
+    def _call_groq(self, prompt: str, system_prompt: Optional[str] = None, timeout: int = 30) -> str:
+        """Call Groq API (free tier available)."""
+        try:
+            if not settings.GROQ_API_KEY:
+                return "Error: GROQ_API_KEY not set. Get a free API key from https://console.groq.com/"
+            
+            url = "https://api.groq.com/openai/v1/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            messages = []
+            if system_prompt:
+                messages.append({"role": "system", "content": system_prompt})
+            messages.append({"role": "user", "content": prompt})
+            
+            payload = {
+                "model": settings.GROQ_MODEL,
+                "messages": messages,
+                "temperature": 0.7,
+                "max_tokens": 2048
+            }
+            response = requests.post(url, json=payload, headers=headers, timeout=timeout)
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            return f"Error calling Groq API: {str(e)}"
+    
+    def _call_huggingface(self, prompt: str, system_prompt: Optional[str] = None, timeout: int = 60) -> str:
+        """Call Hugging Face Inference API (free tier available)."""
+        try:
+            if not settings.HUGGINGFACE_API_KEY:
+                return "Error: HUGGINGFACE_API_KEY not set. Get a free API key from https://huggingface.co/settings/tokens"
+            
+            url = f"https://api-inference.huggingface.co/models/{settings.HUGGINGFACE_MODEL}"
+            headers = {
+                "Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            
+            full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
+            
+            payload = {
+                "inputs": full_prompt,
+                "parameters": {
+                    "max_new_tokens": 512,
+                    "temperature": 0.7,
+                    "return_full_text": False
+                }
+            }
+            response = requests.post(url, json=payload, headers=headers, timeout=timeout)
+            response.raise_for_status()
+            result = response.json()
+            
+            # Handle different response formats
+            if isinstance(result, list) and len(result) > 0:
+                return result[0].get("generated_text", str(result[0]))
+            elif isinstance(result, dict) and "generated_text" in result:
+                return result["generated_text"]
+            else:
+                return str(result)
+        except Exception as e:
+            return f"Error calling Hugging Face API: {str(e)}"
     
     def _get_cache_key(self, query: str, use_rag: bool, use_sql: bool) -> str:
         """Generate cache key for query."""
@@ -170,7 +242,7 @@ Examples:
 Generate the SQL query now:
 """
         
-        sql_query = self._call_ollama(prompt).strip()
+        sql_query = self._call_llm(prompt).strip()
         
         # Clean up the response (remove markdown code blocks if present)
         sql_query = re.sub(r'```sql\s*', '', sql_query)
@@ -291,7 +363,7 @@ Think step by step and determine which tools to use. Then provide your answer ba
 """
             
             # LLM call to determine tools (only if fast path didn't work)
-            initial_response = self._call_ollama(main_prompt, system_prompt, timeout=20)
+            initial_response = self._call_llm(main_prompt, system_prompt, timeout=20)
             tool_calls = self._extract_tool_calls(initial_response)
         
         # Execute tools
@@ -354,7 +426,7 @@ Tool Results:
 Based on the tool results above, provide a clear, comprehensive answer to the user's question. Cite specific data and sources when available.
 """
             
-            final_answer = self._call_ollama(synthesis_prompt, system_prompt, timeout=20)
+            final_answer = self._call_llm(synthesis_prompt, system_prompt, timeout=20)
             response["answer"] = final_answer
         
         # Extract sources from tool results

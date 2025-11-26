@@ -2,9 +2,8 @@
 Natural language insights generator using LLM.
 """
 import json
-import requests
 from typing import Dict, Any, List
-from app.config import settings
+from app.services.llm_service import call_llm
 from app.services.insights import InsightsService
 from app.services.anomaly_detection import AnomalyDetector
 from sqlalchemy import func
@@ -60,24 +59,8 @@ Generate a concise business insights report (3-4 paragraphs) covering:
 Format as markdown with clear sections."""
 
     try:
-        # Call Ollama
-        response = requests.post(
-            f"{settings.OLLAMA_BASE_URL}/api/generate",
-            json={
-                "model": settings.OLLAMA_MODEL,
-                "prompt": context,
-                "stream": False,
-                "options": {
-                    "temperature": 0.7,
-                    "num_predict": 500
-                }
-            },
-            timeout=30
-        )
-        response.raise_for_status()
-        result = response.json()
-        report = result.get("response", "").strip()
-        
+        # Call LLM (supports Ollama, Groq, Hugging Face)
+        report = call_llm(context, timeout=30).strip()
         return report
         
     except Exception as e:

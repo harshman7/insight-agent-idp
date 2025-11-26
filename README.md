@@ -475,6 +475,26 @@ Key configuration options in `app/config.py`:
 
 ---
 
+## Deployment
+
+DocSage can be deployed for **free** using Railway or Render with free LLM APIs (Groq or Hugging Face).
+
+### Quick Deploy to Railway (Free)
+
+1. **Get a free Groq API key**: [console.groq.com](https://console.groq.com)
+2. **Deploy to Railway**: Connect your GitHub repo at [railway.app](https://railway.app)
+3. **Set environment variables**:
+   - `LLM_PROVIDER=groq`
+   - `GROQ_API_KEY=your_key`
+   - Database credentials (Railway provides these automatically)
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for detailed deployment instructions including:
+- Railway deployment (recommended)
+- Render deployment
+- Docker Compose production setup
+- Free LLM API setup (Groq, Hugging Face)
+- Environment variable configuration
+
 ## Future Enhancements
 
 - [ ] Advanced text chunking strategies
